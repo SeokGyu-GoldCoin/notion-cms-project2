@@ -4,7 +4,10 @@
 
 **개인 개발 블로그**는 Notion을 CMS로 활용하여 개발자가 작성한 기술 콘텐츠를 자동으로 웹에 반영하는 블로그 플랫폼입니다.
 
-상세 프로젝트 요구사항은 @/docs/PRD.md 참조
+## Project Context
+
+- **PRD 문서**: @/docs/PRD.md
+- **개발 로드맵**: @/docs/ROADMAP.md
 
 ## 프로젝트 개요
 
