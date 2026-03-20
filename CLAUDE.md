@@ -2,9 +2,11 @@
 
 이 파일은 Claude Code (claude.ai/code)가 이 저장소에서 코드를 작업할 때 참고하도록 작성되었습니다.
 
-## 프로젝트 개요
+**개인 개발 블로그**는 Notion을 CMS로 활용하여 개발자가 작성한 기술 콘텐츠를 자동으로 웹에 반영하는 블로그 플랫폼입니다.
 
-**claude-nextjs-starters**는 React 19, TypeScript, Tailwind CSS v4, shadcn/ui로 구축된 현대적인 프로덕션 레디 Next.js 스타터킷입니다. 예제 페이지, 재사용 가능한 컴포넌트, 그리고 이미 설정된 모범 사례들로 완전한 웹 애플리케이션을 빌드할 수 있는 탄탄한 기반을 제공합니다.
+상세 프로젝트 요구사항은 @/docs/PRD.md 참조
+
+## 프로젝트 개요
 
 **주요 기술 스택:**
 - Next.js 16.1.7 (App Router)
@@ -12,12 +14,11 @@
 - TypeScript 5 (strict mode)
 - Tailwind CSS v4 (with @tailwindcss/postcss)
 - shadcn/ui 4.0.8 + Radix UI 1.4.3
+- @notionhq/client 2.3.0 (Notion CMS 연동)
 - react-hook-form 7.71.2 + zod 4.3.6 (폼 검증)
 - date-fns 4.1.0 (날짜 유틸)
 - next-themes 0.4.6 (테마 관리)
 - lucide-react 0.577.0 (아이콘)
-- tw-animate-css 1.4.0 (Tailwind 애니메이션)
-- @radix-ui/react-icons 1.3.2 (Radix 아이콘)
 
 ## 일반적인 개발 명령어
 
@@ -40,53 +41,42 @@ npm run lint
 ## 프로젝트 구조 & 아키텍처
 
 ```
-claude-nextjs-starters/
+notion-cms-project2/
 ├── app/                          # Next.js App Router 페이지 & 레이아웃
 │   ├── layout.tsx               # 루트 레이아웃 (테마 제공자 포함)
-│   ├── page.tsx                 # 홈 페이지 (랜딩)
-│   ├── dashboard/page.tsx       # 대시보드 예제
-│   ├── sign-in/page.tsx         # 로그인 예제
-│   ├── examples/page.tsx        # 컴포넌트 예제
+│   ├── page.tsx                 # 홈 페이지 (히어로 + 최근 글 + 카테고리)
+│   ├── blog/
+│   │   ├── page.tsx             # 글 목록 페이지
+│   │   ├── [slug]/page.tsx      # 글 상세 페이지
+│   │   └── category/[category]/page.tsx  # 카테고리 페이지
 │   └── globals.css              # 글로벌 스타일
 ├── components/
 │   ├── ui/                      # shadcn/ui 컴포넌트 라이브러리
-│   │   ├── button.tsx           # 재사용 가능한 버튼 컴포넌트
-│   │   ├── card.tsx             # 카드 래퍼
-│   │   ├── dialog.tsx           # 모달 다이얼로그
-│   │   ├── form.tsx             # 폼 래퍼 (react-hook-form)
-│   │   ├── input.tsx            # 입력 필드
-│   │   ├── label.tsx            # 폼 레이블
-│   │   ├── badge.tsx            # 배지 컴포넌트
-│   │   ├── separator.tsx        # 시각적 분리선
-│   │   ├── skeleton.tsx         # 로딩 플레이스홀더
-│   │   ├── avatar.tsx           # 사용자 아바타
-│   │   ├── tooltip.tsx          # 툴팁
-│   │   ├── tabs.tsx             # 탭 컴포넌트
-│   │   └── sheet.tsx            # 사이드바/드로어 컴포넌트
 │   ├── layout/
 │   │   ├── Header.tsx           # 네비게이션 헤더 (use client)
 │   │   ├── Footer.tsx           # 푸터
 │   │   └── PageLayout.tsx       # 메인 페이지 래퍼 (헤더 + 푸터)
 │   ├── ThemeToggle.tsx          # 다크/라이트 모드 토글 버튼 (use client)
 │   └── providers.tsx            # 루트 제공자 (next-themes, use client)
+│   (예정) BlogCard.tsx          # 글 카드 컴포넌트
+│   (예정) NotionRenderer.tsx    # Notion 블록 렌더러
 ├── lib/
 │   ├── utils.ts                 # 유틸리티 함수 (cn() for Tailwind merging)
-│   └── config.ts                # 사이트 설정 (siteConfig, navItems, techStack)
+│   ├── config.ts                # 사이트 설정 (siteConfig, navItems, blogCategories)
+│   ├── notion.ts                # Notion API 래퍼 (getPublishedPosts, getPostBySlug 등)
+│   └── renderNotionBlock.ts     # Notion 블록 렌더링 로직
 ├── types/
-│   └── index.ts                 # TypeScript 타입 정의 (NavItem, SiteConfig, Feature, StatCard)
+│   ├── index.ts                 # 공통 타입 (NavItem, SiteConfig)
+│   └── notion.ts                # Notion 관련 타입 (BlogPost, NotionBlock 등)
 ├── hooks/
-│   └── useTheme.ts              # 테마 관리 훅 (use client, next-themes 래퍼)
+│   └── useTheme.ts              # 테마 관리 훅
+├── docs/
+│   └── PRD.md                   # 프로젝트 요구사항 문서
 ├── public/                      # 정적 자산
-├── .claude/                     # Claude Code 설정
-│   └── settings.local.json      # 훅, 권한 설정
-├── components.json              # shadcn 설정 (컴포넌트 생성용)
-├── .mcp.json                    # MCP 서버 설정 (Playwright, Context7 등)
-├── .env.local                   # 환경 변수 (gitignore 처리됨)
+├── .env.local                   # 환경 변수 (NOTION_API_KEY, NOTION_DATABASE_ID)
 ├── next.config.ts               # Next.js 설정
 ├── tailwind.config.ts           # Tailwind CSS 설정
 ├── tsconfig.json                # TypeScript 설정
-├── postcss.config.mjs           # PostCSS 설정 (Tailwind v4용)
-├── eslint.config.mjs            # ESLint 설정 (Next.js + TypeScript rules)
 └── package.json                 # 의존성 & 스크립트
 ```
 

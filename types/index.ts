@@ -1,5 +1,6 @@
 import React from 'react'
 
+// 네비게이션 메뉴 아이템 타입
 export interface NavItem {
   label: string
   href: string
@@ -9,21 +10,9 @@ export interface NavItem {
   external?: boolean
 }
 
+// 사이트 전역 설정 타입
 export interface SiteConfig {
   name: string
   description: string
   links: { github: string }
-}
-
-export interface Feature {
-  title: string
-  description: string
-  icon: React.ComponentType<{ className?: string }>
-}
-
-export interface StatCard {
-  title: string
-  value: string
-  change: number // 증감율 %
-  icon: React.ComponentType<{ className?: string }>
 }
